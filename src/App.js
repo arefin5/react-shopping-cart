@@ -8,7 +8,7 @@ import Cart from './components/Cart'
 class App extends Component {
   state = {
     products: data.products,
-    cartItems:[] ,
+    cartItems:localStorage.getItem("cartItems")? JSON.parse(localStorage.getItem("cartItems")):[] ,
     size: "",
     sort: "",
   };
@@ -27,17 +27,22 @@ class App extends Component {
        }
        this.setState({cartItems})
        // console.log(cartItems)
-       
+       localStorage.setItem("cartItems",JSON.stringify(cartItems))
      }
      // 
      removeFromCart=product=>{
        const cartItems=this.state.cartItems.slice();
        this.setState({
          cartItems:cartItems.filter(x=>x._id !== product._id),
-       
        })
+       localStorage.setItem("cartItems",JSON.stringify(cartItems.filter(x=>x._id !== product._id)))
    
      }
+// 
+createOrder=(order)=>{
+  console.log(order.name)
+  console.log(order.cartItems)
+}
 // 
   sortProducts = (event) => {
     const sort = event.target.value;
@@ -94,7 +99,7 @@ class App extends Component {
               <Products Products={this.state.products}  addToCart={this.addToCart}/>
             </div>
             <div className="sidebar">
-              <Cart cartItems={this.state.cartItems} removeFromCart={this.removeFromCart} />
+              <Cart cartItems={this.state.cartItems} removeFromCart={this.removeFromCart} createOrder={this.createOrder} />
             </div>
           </div>
         </main>
